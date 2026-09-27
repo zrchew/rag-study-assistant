@@ -11,7 +11,8 @@ Setup (run once):
     pip install -r requirements.txt
     export ANTHROPIC_API_KEY=your_key_here
 """
-
+from dotenv import load_dotenv
+load_dotenv()
 import sys
 import os
 
