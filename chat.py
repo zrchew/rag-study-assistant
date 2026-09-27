@@ -10,6 +10,9 @@ Usage:
     python chat.py                            (run repeatedly)
 """
 
+from dotenv import load_dotenv
+load_dotenv()
+
 import os
 import json
 import base64

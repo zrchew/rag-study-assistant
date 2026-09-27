@@ -12,6 +12,9 @@ Usage:
     python build_index.py path/to/your.pdf
 """
 
+from dotenv import load_dotenv
+load_dotenv()
+
 import sys
 import os
 import json
