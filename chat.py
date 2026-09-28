@@ -10,9 +10,6 @@ Usage:
     python chat.py                            (run repeatedly)
 """
 
-from dotenv import load_dotenv
-load_dotenv()
-
 import os
 import json
 import base64
@@ -25,6 +22,14 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import HumanMessage, AIMessage
+from dotenv import load_dotenv
+from pathlib import Path
+
+# Load .env from this script's own folder (not whatever folder the terminal
+# is in), and let it override any empty/stale value already set in the
+# system environment -- a common issue on managed work machines.
+ENV_PATH = Path(__file__).resolve().parent / ".env"
+load_dotenv(dotenv_path=ENV_PATH, override=True)
 
 CHROMA_DIR = "./chroma_db"
 INDEX_STORE_DIR = "./index_store"
@@ -97,6 +102,14 @@ def answer_question(vectorstore, clip_model, image_embeddings, image_paths, ques
 
 
 if __name__ == "__main__":
+    # Fail fast with a clear message instead of crashing after the first question.
+    if not os.environ.get("ANTHROPIC_API_KEY"):
+        print("ANTHROPIC_API_KEY not found.")
+        print(f"Looked for a .env file at: {ENV_PATH}")
+        print(f".env exists at that path: {ENV_PATH.exists()}")
+        exit(1)
+    print("API key loaded.")
+
     if not os.path.exists(CHROMA_DIR) or not os.path.exists(INDEX_STORE_DIR):
         print("No index found. Run this first: python build_index.py path/to/your.pdf")
         exit(1)
@@ -122,7 +135,8 @@ if __name__ == "__main__":
         )
 
         print(f"\nClaude: {answer}\n")
-        pages = sorted(set(d.metadata.get("page", "?") for d in text_docs))
+        # PyPDFLoader numbers pages from 0; +1 makes them match page_N.png
+        pages = sorted({d.metadata.get("page", -1) + 1 for d in text_docs})
         print(f"(sources: pages {pages}" + (f", image: {best_image})" if best_image else ")"))
         print()
 
