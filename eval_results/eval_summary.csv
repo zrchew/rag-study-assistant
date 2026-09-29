@@ -1,0 +1,5 @@
+﻿label,k,threshold,questions,images_attached,avg_seconds,errors,manual_pass,manual_partial,manual_fail
+,6,0.22,11,11,4.2,0,8,1,2
+,10,0.22,11,11,4.6,0,8,1,2
+,3,0.22,11,11,4.3,0,5,0,5
+,6,0.3,11,0,3.2,0,6,1,4

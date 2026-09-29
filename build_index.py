@@ -67,7 +67,7 @@ def build_and_save_text_index(pdf_path: str):
     print("Building text vector store...")
     loader = PyPDFLoader(pdf_path)
     pages = loader.load()
-    splitter = RecursiveCharacterTextSplitter(chunk_size=1200, chunk_overlap=200)
+    splitter = RecursiveCharacterTextSplitter(chunk_size=600, chunk_overlap=100)
     chunks = splitter.split_documents(pages)
     embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
     # persist_directory means this is saved to disk -- chat.py will load it
